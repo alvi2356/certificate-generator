@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>UAP Cyber Siege 2025 - Certificate Generator</title>
+<style>
+  /* Background Gradient Animation */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    overflow: auto; /* Changed from hidden to auto to allow scrolling */
+    position: relative;
+    z-index: 0;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(270deg, #0f2027, #203a43, #2c5364, #1d006e, #ff5f6d, #00c9ff);
+    background-size: 1200% 1200%;
+    animation: gradientMove 15s ease infinite;
+    z-index: -2;
+  }
+
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  #particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    top: 0;
+    left: 0;
+  }
+
+  #certificate-container {
+    position: relative;
+    width: 1097px;
+    height: 794px;
+    margin: 0px auto;
+    border: 2px solid #333;
+    background: white;
+    z-index: 1;
+  }
+
+  #certificate-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #name-text {
+    position: absolute;
+    top: 290px;
+    left:65%;
+    transform: translateX(-50%);
+    font-family: 'Brush Script MT', cursive, 'Georgia', serif;
+    font-size: 75px;
+    font-weight: 250;
+    color: #222;
+    pointer-events: none;
+    user-select: none;
+    width: 90%;
+    text-align: center;
+  }
+
+  input, button {
+    font-size: 18px;
+    padding: 8px;
+    margin: 10px;
+    z-index: 1;
+    position: relative;
+  }
+
+  footer {
+    color: #fff;
+    text-align: center;
+    font-size: 18px; /* Increased font size for readability */
+    line-height: 1.6;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+  }
+
+  #note {
+    color: #fff;
+    font-style: italic;
+    margin: 15px 0;
+    z-index: 1;
+  }
+
+  h1 {
+    color: #fff;
+    z-index: 1;
+    position: relative;
+  }
+</style>
+</head>
+<body>
+
+<!-- Particle Background -->
+<div id="particles-js"></div>
+
+<h1>UAP Cyber Siege 2025 Certificate Generator</h1>
+<div id="info"></div>
+
+<div>
+  <input type="text" id="full-name" placeholder="Enter full name for certificate" />
+  <br />
+  <button id="download-btn" disabled>Download Certificate PNG</button>
+</div>
+
+<div id="certificate-container">
+  <img
+    id="certificate-image"
+    src="certificate-template.png"
+    alt="Certificate Template"
+    crossOrigin="anonymous"
+  />
+  <div id="name-text"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<script>
+  // URL Parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const team = urlParams.get('team');
+  const username = urlParams.get('username');
+
+  const infoDiv = document.getElementById('info');
+  const fullNameInput = document.getElementById('full-name');
+  const downloadBtn = document.getElementById('download-btn');
+  const nameText = document.getElementById('name-text');
+  const certificateImage = document.getElementById('certificate-image');
+
+  if (!team || !username) {
+    infoDiv.innerHTML = '<p style="color:red;">Invalid access. Please verify first <a href="verify.html">here</a>.</p>';
+    fullNameInput.style.display = 'none';
+    downloadBtn.style.display = 'none';
+  } else {
+    infoDiv.innerHTML = `
+      <p style="color:#fff;"><strong>Team Name:</strong> ${team}</p>
+      <p style="color:#fff;"><strong>Username:</strong> ${username}</p>
+      <p id="note">* Username used for contest time verification.</p>
+    `;
+  }
+
+  fullNameInput.addEventListener('input', () => {
+    const name = fullNameInput.value.trim();
+    nameText.textContent = name;
+    downloadBtn.disabled = name === '';
+  });
+
+  certificateImage.onload = () => {
+    if (fullNameInput.value.trim() !== '') {
+      downloadBtn.disabled = false;
+    }
+  };
+
+  downloadBtn.addEventListener('click', () => {
+    const fullName = fullNameInput.value.trim();
+    if (!fullName) {
+      alert('Please enter your full name.');
+      return;
+    }
+
+    html2canvas(document.getElementById('certificate-container'), { scale: 2, useCORS: true }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `${fullName}_UAP_Cyber_Siege_2025_Certificate.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }).catch(err => {
+      alert('Failed to generate image. See console for details.');
+      console.error(err);
+    });
+  });
+
+  // Initialize particles.js
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 80, density: { enable: true, value_area: 800 } },
+      color: { value: "#ffffff" },
+      shape: { type: "circle" },
+      opacity: { value: 0.5 },
+      size: { value: 3 },
+      line_linked: { enable: true, distance: 120, color: "#ffffff", opacity: 0.4, width: 1 },
+      move: {
+        enable: true,
+        speed: 3,
+        direction: "none",
+        random: true,
+        straight: false,
+        out_mode: "bounce",
+      }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: { enable: true, mode: "repulse" },
+        onclick: { enable: true, mode: "push" }
+      },
+      modes: {
+        repulse: { distance: 100 },
+        push: { particles_nb: 4 }
+      }
+    },
+    retina_detect: true
+  });
+</script>
+
+<footer>
+  <div style="padding: 30px 20px; max-width: 900px; margin: 0 auto; color: #fff;">
+    <p><strong>Cyber Security Club, Department of CSE, University of Asia Pacific</strong></p>
+    <p>We proudly present this automated certificate generation system for participants of <strong>UAP Cyber Siege 2025</strong>.</p>
+    <p>If you face any issues or need assistance, please reach out to us:</p>
+    <p>Email: <a href="mailto:cse.cybersecurity@uap-bd.edu" style="color: #00f3ff;">cse.cybersecurity@uap-bd.edu</a> | Facebook: <a href="https://www.facebook.com/uap.cyber.siege" target="_blank" style="color: #00f3ff;">UAP Cyber Siege 2025</a></p>
+    <p style="margin-top: 20px;">&copy; 2025 Cyber Security Club, CSE-UAP. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
